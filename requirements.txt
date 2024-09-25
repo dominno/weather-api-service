@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+aiohttp
+aiobotocore==2.15.1
+boto3
+botocore
+fastapi-cache2[redis]
+redis
+pytest
+pytest-asyncio
+httpx

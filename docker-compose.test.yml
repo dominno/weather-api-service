@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    command: ["pytest", "--disable-warnings"]
+    depends_on:
+      - localstack
+      - redis
+
+  localstack:
+    image: localstack/localstack:latest
+    container_name: localstack
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=s3,dynamodb
+      - DEBUG=1
+      - DATA_DIR=/localstack_data
+    volumes:
+      - "./localstack_data:/localstack_data"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s http://localhost:4566/_localstack/health | grep '\"s3\": \"available\"' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"

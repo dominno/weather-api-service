@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  web:
+    image: your-dockerhub-username/your-fastapi-app:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    environment:
+      - S3_BUCKET_NAME=your-bucket-name
+      - DYNAMODB_TABLE_NAME=your-table-name
+      - AWS_ACCESS_KEY=your-access-key
+      - AWS_SECRET_KEY=your-secret-key
+      - REGION_NAME=your-region
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
